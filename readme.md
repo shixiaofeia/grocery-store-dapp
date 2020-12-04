@@ -5,15 +5,15 @@
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201203192037919.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
 
+[项目源码](https://github.com/shixiaofeia/grocery-store-dapp)
 
 ## 环境需求
-```
-MetaMask
-node
-yarn
-Ganache
-truffle 
-lite-server
+1. [MetaMask](https://metamask.io/)
+2. node
+3. yarn
+4. [Ganache](https://www.trufflesuite.com/ganache)
+5. truffle     (npm install -g truffle)
+6. lite-server (yarn add lite-server )
 ```
 
 ## 后端
@@ -323,6 +323,13 @@ app.js里面的代码知道怎么初始化调用合约就可以了;
 ```
 yarn run dev
 ```
+
+## 扩展
+> 当然有兴趣的朋友也可以在此之上多添加一些功能, 比如:
+
+1. 新增商品和领取通知(event);
+2. 显示当前账户可领取次数;
+3. ....
 
 ## 参考文档
 ```
