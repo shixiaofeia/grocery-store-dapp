@@ -1,6 +1,6 @@
 # 手摸手用Truffle开发自己的第一个DApp
 ## 前言
-简单写个杂货铺的DApp, 每个人可以把自己不用的东西挂在上面, 以获得领取自己需要东西机会, 简单来说就是共享自己无用的东西; 
+简单写个杂货铺的DApp, 每个人可以把自己不用的物品挂在上面, 以获得领取别人物品的机会, 简单来说就是共享自己无用的物品; 
 > 效果图, 请忽略样式, 毕竟我是个后端
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20201203192037919.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
@@ -14,7 +14,7 @@
 4. [Ganache](https://www.trufflesuite.com/ganache)
 5. truffle     (npm install -g truffle)
 6. lite-server (yarn add lite-server )
-```
+
 
 ## 后端
 
@@ -316,13 +316,75 @@ yarn add lite-server
 ```
 
 ### 代码
-前端属实好几年没写过了, 这里是根据参考博客的前端代码改的, 然后js里面的truffle-contract.js 和web3.js 是从node_modules里面copy出来的, 因为合约里面有一个返回数组的, 所以得用较新版本的包; 大家主要看看
+大家直接看我的源码吧, 前端属实好几年没写过了, 这里是根据参考博客的前端代码改的, 然后js里面的truffle-contract.js 和web3.js 是从node_modules里面copy出来的, 因为合约里面有一个返回数组的, 所以得用较新版本的包; 大家主要看看
 app.js里面的代码知道怎么初始化调用合约就可以了;
 
 ### 启动
 ```
 yarn run dev
 ```
+
+### MetaMask 添加本地测试网
+> 点击MetaMask右上角网络选择自定义Rpc加入本地测试网
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204112948247.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+
+> 然后点击导入账户, 在Ganache中找个有ETH的私钥导进去就行
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204113242414.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204113419397.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+
+> 这样就可以用MetaMash进行添加和认领物品的确认操作了
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204113735290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+
+## 部署到Ropsten测试网络
+
+### 安装
+> yarn add truffle-hdwallet-provider
+
+### 注册https://infura.io 获取节点连接
+> 注册项目获取PROJECT ID 
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204115354437.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+
+### 获取MetaMask账户助记词, 要在Ropsten网络有ETH
+> 账户设置的安全与隐私里面可以获取到助记词
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20201204115713278.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3l3ZGh6eGY=,size_16,color_FFFFFF,t_70)
+
+
+### 增加Ropsten网络配置
+> truffle-config.js  实际项目生成都有写好的, 打开注释就可以了
+```
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const infuraKey = "infura获取的projectId";
+const mnemonic = "助记词";
+
+module.exports = {
+    ropsten: {
+    provider: () => new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infuraKey),
+    network_id: 3,       // Ropsten's id
+    gas: 5500000,        // Ropsten has a lower block limit than mainnet
+    confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+    timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+    skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+    },
+}
+```
+### 部署合约
+> truffle migrate --network ropsten  --reset --compile-all
+
+成功返回
+```
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0.0211683 ETH
+
+```
+### 启动
+> 切换MetaMash的网络环境为Ropsten测试网络, 然后F5刷新页面就可以了, app.js里判断了如果有web网络注入会优先选取, 注意! 测试网络的区块打包会慢一些, 不会像本地区块一样添加领取秒成功, 需要等区块确认后刷新页面才能显示
 
 ## 扩展
 > 当然有兴趣的朋友也可以在此之上多添加一些功能, 比如:
@@ -336,4 +398,5 @@ yarn run dev
 https://learnblockchain.cn/docs/truffle/index.html
 https://learnblockchain.cn/2018/01/12/first-dapp/#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E6%8E%A5%E5%8F%A3%E5%92%8C%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E4%BA%A4%E4%BA%92
 https://www.jianshu.com/p/b7be51dd8e84
+https://cloud.tencent.com/developer/article/1347300
 ```
